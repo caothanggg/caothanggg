@@ -15,8 +15,12 @@ use App\Http\Controllers\BinhLuanController;
 use App\Http\Controllers\HinhAnhController;
 use App\Http\Controllers\SanPhamController;
 use App\Http\Controllers\DonHangController;
+use App\Http\Controllers\DonHangChiTietController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\KhachHangController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
+use App\Http\Controllers\VerifyEmailController;
 
 
 /*
@@ -38,13 +42,16 @@ Route::get('/', [HomeController::class, 'getHome'])->name('frontend');
 // Trang sản phẩm
 Route::get('/san-pham', [HomeController::class, 'getSanPham'])->name('frontend.sanpham');
 Route::get('/san-pham', [HomeController::class, 'postSanPham'])->name('frontend.sanpham');
+Route::get('/san-pham/{tensanpham_slug}', [HomeController::class, 'getSanPham_ChiTiet'])->name('frontend.sanpham.chitiet');
+
+
 
 //Thương hiệu/loai/ram/bonhotrong/thietke
-    Route::get('/loai-san-pham/{all}', [HomeController::class, 'getLoaiSanPham'])->name('frontend.loaisanpham');
-    Route::get('/thuong-hieu/{all}', [HomeController::class, 'getThuongHieu'])->name('frontend.thuonghieu');
-    Route::get('/ram/{all}', [HomeController::class, 'getRam'])->name('frontend.ram');
-    Route::get('/bo-nho-trong/{all}', [HomeController::class, 'getBoNhoTrong'])->name('frontend.bonhotrong');
-    Route::get('/thiet-ke/{all}', [HomeController::class, 'getThietKe'])->name('frontend.thietke');
+Route::get('/loai-san-pham/{all}', [HomeController::class, 'getLoaiSanPham'])->name('frontend.loaisanpham');
+Route::get('/thuong-hieu/{all}', [HomeController::class, 'getThuongHieu'])->name('frontend.thuonghieu');
+Route::get('/ram/{all}', [HomeController::class, 'getRam'])->name('frontend.ram');
+Route::get('/bo-nho-trong/{all}', [HomeController::class, 'getBoNhoTrong'])->name('frontend.bonhotrong');
+Route::get('/thiet-ke/{all}', [HomeController::class, 'getThietKe'])->name('frontend.thietke');
 
 // Trang giỏ hàng
 Route::get('/gio-hang', [HomeController::class, 'getGioHang'])->name('frontend.giohang');
@@ -75,15 +82,21 @@ Route::get('/khach-hang/dang-nhap', [HomeController::class, 'getDangNhap'])->nam
 
 // Trang tài khoản khách hàng
 Route::prefix('khach-hang')->group(function() {
+    Route::get('/danh-sach-san-pham-yeu-thich', [KhachHangController::class, 'getSanPhamYeuThich'])->name('khachhang.danhsachsanpham');
+    Route::get('/them-san-pham-yeu-thich/{tensanpham_slug}', [KhachHangController::class, 'getThemSanPhamYeuThich'])->name('khachhang.sanphamthem');
+    Route::get('/xoa-san-pham-yeu-thich', [KhachHangController::class, 'getSanPhamYeuThich'])->name('khachhang.sanpham');
  // Trang chủ tài khoản khách hàng
  Route::get('/', [KhachHangController::class, 'getHome'])->name('khachhang');
 
 // Xem và cập nhật trạng thái đơn hàng
- Route::get('/don-hang/{id}', [KhachHangController::class, 'getDonHang'])->name('khachhang.donhang');
- Route::post('/don-hang/{id}', [KhachHangController::class, 'postDonHang'])->name('khachhang.donhang');
+Route::get('/donhang', [KhachHangController::class, 'getDonHang'])->name('khachhang.donhang');
+Route::get('/don-hang/{id}', [KhachHangController::class, 'getDonHang_ChiTiet'])->name('khachhang.donhang.chitiet');
+Route::post('/don-hang/{id}', [KhachHangController::class, 'postDonHang_ChiTiet'])->name('khachhang.donhang.chitiet');
+Route::get('/donhang-huy/{id}', [KhachHangController::class, 'getDonHangHuy'])->name('khachhang.donhang.huy');
  
  // Cập nhật thông tin tài khoản
- Route::post('/cap-nhat-ho-so', [KhachHangController::class, 'postCapNhatHoSo'])->name('khachhang.capnhathoso');
+ Route::get('/hoso', [KhachHangController::class, 'getHoSo'])->name('khachhang.hoso');
+ Route::post('/hoso', [KhachHangController::class, 'postHoSo'])->name('khachhang.hoso');
 });
 
 
@@ -93,66 +106,65 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function() {
     Route::get('/403', [AdminController::class, 'getForbidden'])->name('forbidden');
 
     //Quản lý loại sản phẩm
-    Route::get('/loaisanpham', [LoaiSanPhamController::class, 'getDanhSach'])->name('loaisanpham')->middleware('admin');
-    Route::get('/loaisanpham/them', [LoaiSanPhamController::class, 'getThem'])->name('loaisanpham.them')->middleware('admin');
-    Route::post('/loaisanpham/them', [LoaiSanPhamController::class, 'postThem'])->name('loaisanpham.them')->middleware('admin');
-    Route::get('/loaisanpham/sua/{id}', [LoaiSanPhamController::class, 'getSua'])->name('loaisanpham.sua')->middleware('admin');
-    Route::post('/loaisanpham/sua/{id}', [LoaiSanPhamController::class, 'postSua'])->name('loaisanpham.sua')->middleware('admin');
-    Route::get('/loaisanpham/xoa/{id}', [LoaiSanPhamController::class, 'getXoa'])->name('loaisanpham.xoa')->middleware('admin');
+    Route::get('/loaisanpham', [LoaiSanPhamController::class, 'getDanhSach'])->name('loaisanpham')->middleware('nhanvien');
+    Route::get('/loaisanpham/them', [LoaiSanPhamController::class, 'getThem'])->name('loaisanpham.them')->middleware('nhanvien');
+    Route::post('/loaisanpham/them', [LoaiSanPhamController::class, 'postThem'])->name('loaisanpham.them')->middleware('nhanvien');
+    Route::get('/loaisanpham/sua/{id}', [LoaiSanPhamController::class, 'getSua'])->name('loaisanpham.sua')->middleware('nhanvien');
+    Route::post('/loaisanpham/sua/{id}', [LoaiSanPhamController::class, 'postSua'])->name('loaisanpham.sua')->middleware('nhanvien');
+    Route::get('/loaisanpham/xoa/{id}', [LoaiSanPhamController::class, 'getXoa'])->name('loaisanpham.xoa')->middleware('nhanvien');
 
-    Route::post('/sanpham/nhap', [SanPhamController::class, 'postNhap'])->name('sanpham.nhap')->middleware('admin');
-    Route::get('/sanpham/xuat', [SanPhamController::class, 'getXuat'])->name('sanpham.xuat')->middleware('admin');
+    
 
 
     //Quản lý thương hiệu
-    Route::get('/thuonghieu', [ThuongHieuController::class, 'getDanhSach'])->name('thuonghieu')->middleware('admin');
-    Route::get('/thuonghieu/them', [ThuongHieuController::class, 'getThem'])->name('thuonghieu.them')->middleware('admin');
-    Route::post('/thuonghieu/them', [ThuongHieuController::class, 'postThem'])->name('thuonghieu.them')->middleware('admin');
-    Route::get('/thuonghieu/sua/{id}', [ThuongHieuController::class, 'getSua'])->name('thuonghieu.sua')->middleware('admin');
-    Route::post('/thuonghieu/sua/{id}', [ThuongHieuController::class, 'postSua'])->name('thuonghieu.sua')->middleware('admin');
-    Route::get('/thuonghieu/xoa/{id}', [ThuongHieuController::class, 'getXoa'])->name('thuonghieu.xoa')->middleware('admin');
-    Route::post('/thuonghieu/nhap', [ThuongHieuController::class, 'postNhap'])->name('thuonghieu.nhap')->middleware('admin');
-    Route::get('/thuonghieu/xuat', [ThuongHieuController::class, 'getXuat'])->name('thuonghieu.xuat')->middleware('admin');
+    Route::get('/thuonghieu', [ThuongHieuController::class, 'getDanhSach'])->name('thuonghieu')->middleware('nhanvien');
+    Route::get('/thuonghieu/them', [ThuongHieuController::class, 'getThem'])->name('thuonghieu.them')->middleware('nhanvien');
+    Route::post('/thuonghieu/them', [ThuongHieuController::class, 'postThem'])->name('thuonghieu.them')->middleware('nhanvien');
+    Route::get('/thuonghieu/sua/{id}', [ThuongHieuController::class, 'getSua'])->name('thuonghieu.sua')->middleware('nhanvien');
+    Route::post('/thuonghieu/sua/{id}', [ThuongHieuController::class, 'postSua'])->name('thuonghieu.sua')->middleware('nhanvien');
+    Route::get('/thuonghieu/xoa/{id}', [ThuongHieuController::class, 'getXoa'])->name('thuonghieu.xoa')->middleware('nhanvien');
+    Route::post('/thuonghieu/nhap', [ThuongHieuController::class, 'postNhap'])->name('thuonghieu.nhap')->middleware('nhanvien');
+    Route::get('/thuonghieu/xuat', [ThuongHieuController::class, 'getXuat'])->name('thuonghieu.xuat')->middleware('nhanvien');
 
     //Quản lý ram
-    Route::get('/ram', [RamController::class, 'getDanhSach'])->name('ram')->middleware('admin');
-    Route::get('/ram/them', [RamController::class, 'getThem'])->name('ram.them')->middleware('admin');
-    Route::post('/ram/them', [RamController::class, 'postThem'])->name('ram.them')->middleware('admin');
-    Route::get('/ram/sua/{id}', [RamController::class, 'getSua'])->name('ram.sua')->middleware('admin');
-    Route::post('/ram/sua/{id}', [RamController::class, 'postSua'])->name('ram.sua')->middleware('admin');
-    Route::get('/ram/xoa/{id}', [RamController::class, 'getXoa'])->name('ram.xoa')->middleware('admin');
+    Route::get('/ram', [RamController::class, 'getDanhSach'])->name('ram')->middleware('nhanvien');
+    Route::get('/ram/them', [RamController::class, 'getThem'])->name('ram.them')->middleware('nhanvien');
+    Route::post('/ram/them', [RamController::class, 'postThem'])->name('ram.them')->middleware('nhanvien');
+    Route::get('/ram/sua/{id}', [RamController::class, 'getSua'])->name('ram.sua')->middleware('nhanvien');
+    Route::post('/ram/sua/{id}', [RamController::class, 'postSua'])->name('ram.sua')->middleware('nhanvien');
+    Route::get('/ram/xoa/{id}', [RamController::class, 'getXoa'])->name('ram.xoa')->middleware('nhanvien');
 
     //Quản lý bộ nhớ trong
-    Route::get('/bonhotrong', [BoNhoTrongController::class, 'getDanhSach'])->name('bonhotrong')->middleware('admin');
-    Route::get('/bonhotrong/them', [BoNhoTrongController::class, 'getThem'])->name('bonhotrong.them')->middleware('admin');
-    Route::post('/bonhotrong/them', [BoNhoTrongController::class, 'postThem'])->name('bonhotrong.them')->middleware('admin');
-    Route::get('/bonhotrong/sua/{id}', [BoNhoTrongController::class, 'getSua'])->name('bonhotrong.sua')->middleware('admin');
-    Route::post('/bonhotrong/sua/{id}', [BoNhoTrongController::class, 'postSua'])->name('bonhotrong.sua')->middleware('admin');
-    Route::get('/bonhotrong/xoa/{id}', [BoNhoTrongController::class, 'getXoa'])->name('bonhotrong.xoa')->middleware('admin');
+    Route::get('/bonhotrong', [BoNhoTrongController::class, 'getDanhSach'])->name('bonhotrong')->middleware('nhanvien');
+    Route::get('/bonhotrong/them', [BoNhoTrongController::class, 'getThem'])->name('bonhotrong.them')->middleware('nhanvien');
+    Route::post('/bonhotrong/them', [BoNhoTrongController::class, 'postThem'])->name('bonhotrong.them')->middleware('nhanvien');
+    Route::get('/bonhotrong/sua/{id}', [BoNhoTrongController::class, 'getSua'])->name('bonhotrong.sua')->middleware('nhanvien');
+    Route::post('/bonhotrong/sua/{id}', [BoNhoTrongController::class, 'postSua'])->name('bonhotrong.sua')->middleware('nhanvien');
+    Route::get('/bonhotrong/xoa/{id}', [BoNhoTrongController::class, 'getXoa'])->name('bonhotrong.xoa')->middleware('nhanvien');
 
     //Quản lý phương thức thanh toán
-    Route::get('/phuongthucthanhtoan', [PhuongThucThanhToanController::class, 'getDanhSach'])->name('phuongthucthanhtoan')->middleware('admin');
-    Route::get('/phuongthucthanhtoan/them', [PhuongThucThanhToanController::class, 'getThem'])->name('phuongthucthanhtoan.them')->middleware('admin');
-    Route::post('/phuongthucthanhtoan/them', [PhuongThucThanhToanController::class, 'postThem'])->name('phuongthucthanhtoan.them')->middleware('admin');
-    Route::get('/phuongthucthanhtoan/sua/{id}', [PhuongThucThanhToanController::class, 'getSua'])->name('phuongthucthanhtoan.sua')->middleware('admin');
-    Route::post('/phuongthucthanhtoan/sua/{id}', [PhuongThucThanhToanController::class, 'postSua'])->name('phuongthucthanhtoan.sua')->middleware('admin');
-    Route::get('/phuongthucthanhtoan/xoa/{id}', [PhuongThucThanhToanController::class, 'getXoa'])->name('phuongthucthanhtoan.xoa')->middleware('admin');
+    Route::get('/phuongthucthanhtoan', [PhuongThucThanhToanController::class, 'getDanhSach'])->name('phuongthucthanhtoan')->middleware('nhanvien');
+    Route::get('/phuongthucthanhtoan/them', [PhuongThucThanhToanController::class, 'getThem'])->name('phuongthucthanhtoan.them')->middleware('nhanvien');
+    Route::post('/phuongthucthanhtoan/them', [PhuongThucThanhToanController::class, 'postThem'])->name('phuongthucthanhtoan.them')->middleware('nhanvien');
+    Route::get('/phuongthucthanhtoan/sua/{id}', [PhuongThucThanhToanController::class, 'getSua'])->name('phuongthucthanhtoan.sua')->middleware('nhanvien');
+    Route::post('/phuongthucthanhtoan/sua/{id}', [PhuongThucThanhToanController::class, 'postSua'])->name('phuongthucthanhtoan.sua')->middleware('nhanvien');
+    Route::get('/phuongthucthanhtoan/xoa/{id}', [PhuongThucThanhToanController::class, 'getXoa'])->name('phuongthucthanhtoan.xoa')->middleware('nhanvien');
 
     //Quản lý thiết kế
-    Route::get('/thietke', [ThietKeController::class, 'getDanhSach'])->name('thietke')->middleware('admin');
-    Route::get('/thietke/them', [ThietKeController::class, 'getThem'])->name('thietke.them')->middleware('admin');
-    Route::post('/thietke/them', [ThietKeController::class, 'postThem'])->name('thietke.them')->middleware('admin');
-    Route::get('/thietke/sua/{id}', [ThietKeController::class, 'getSua'])->name('thietke.sua')->middleware('admin');
-    Route::post('/thietke/sua/{id}', [ThietKeController::class, 'postSua'])->name('thietke.sua')->middleware('admin');
-    Route::get('/thietke/xoa/{id}', [ThietKeController::class, 'getXoa'])->name('thietke.xoa')->middleware('admin');
+    Route::get('/thietke', [ThietKeController::class, 'getDanhSach'])->name('thietke')->middleware('nhanvien');
+    Route::get('/thietke/them', [ThietKeController::class, 'getThem'])->name('thietke.them')->middleware('nhanvien');
+    Route::post('/thietke/them', [ThietKeController::class, 'postThem'])->name('thietke.them')->middleware('nhanvien');
+    Route::get('/thietke/sua/{id}', [ThietKeController::class, 'getSua'])->name('thietke.sua')->middleware('nhanvien');
+    Route::post('/thietke/sua/{id}', [ThietKeController::class, 'postSua'])->name('thietke.sua')->middleware('nhanvien');
+    Route::get('/thietke/xoa/{id}', [ThietKeController::class, 'getXoa'])->name('thietke.xoa')->middleware('nhanvien');
 
     //Quản lý thiết kế
-    Route::get('/tinhtrang', [TinhTrangController::class, 'getDanhSach'])->name('tinhtrang')->middleware('admin');
-    Route::get('/tinhtrang/them', [TinhTrangController::class, 'getThem'])->name('tinhtrang.them')->middleware('admin');
-    Route::post('/tinhtrang/them', [TinhTrangController::class, 'postThem'])->name('tinhtrang.them')->middleware('admin');
-    Route::get('/tinhtrang/sua/{id}', [TinhTrangController::class, 'getSua'])->name('tinhtrang.sua')->middleware('admin');
-    Route::post('/tinhtrang/sua/{id}', [TinhTrangController::class, 'postSua'])->name('tinhtrang.sua')->middleware('admin');
-    Route::get('/tinhtrang/xoa/{id}', [TinhTrangController::class, 'getXoa'])->name('tinhtrang.xoa')->middleware('admin');
+    Route::get('/tinhtrang', [TinhTrangController::class, 'getDanhSach'])->name('tinhtrang')->middleware('nhanvien');
+    Route::get('/tinhtrang/them', [TinhTrangController::class, 'getThem'])->name('tinhtrang.them')->middleware('nhanvien');
+    Route::post('/tinhtrang/them', [TinhTrangController::class, 'postThem'])->name('tinhtrang.them')->middleware('nhanvien');
+    Route::get('/tinhtrang/sua/{id}', [TinhTrangController::class, 'getSua'])->name('tinhtrang.sua')->middleware('nhanvien');
+    Route::post('/tinhtrang/sua/{id}', [TinhTrangController::class, 'postSua'])->name('tinhtrang.sua')->middleware('nhanvien');
+    Route::get('/tinhtrang/xoa/{id}', [TinhTrangController::class, 'getXoa'])->name('tinhtrang.xoa')->middleware('nhanvien');
 
     // Quản lý bài viết
     Route::get('/baiviet', [BaiVietController::class, 'getDanhSach'])->name('baiviet')->middleware('nhanvien');
@@ -163,12 +175,13 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function() {
     Route::get('/baiviet/xoa/{id}', [BaiVietController::class, 'getXoa'])->name('baiviet.xoa')->middleware('nhanvien');
     Route::post('/baiviet/nhap', [BaiVietController::class, 'postNhap'])->name('baiviet.nhap')->middleware('nhanvien');
     Route::get('/baiviet/xuat', [BaiVietController::class, 'getXuat'])->name('baiviet.xuat')->middleware('nhanvien');
-    Route::get('/baiviet/kiemduyet/{id}', [BaiVietController::class, 'getOnOff'])->name('baiviet.kiemduyet')->middleware('nhanvien');
-    Route::get('/baiviet/hienthi/{id}', [BaiVietController::class, 'getHienThi'])->name('baiviet.hienthi')->middleware('nhanvien');
+    Route::get('/baiviet/kiemduyet/{id}', [BaiVietController::class, 'getOnOff'])->name('baiviet.kiemduyet')->middleware('admin');
+    Route::get('/baiviet/hienthi/{id}', [BaiVietController::class, 'getHienThi'])->name('baiviet.hienthi')->middleware('admin');
     Route::get('/baiviet/binhluan/{id}', [BaiVietController::class, 'getBinhLuan'])->name('baiviet.binhluan')->middleware('nhanvien');
    
     // Quản lý bình luận
-    Route::get('/binhluan', [BinhLuanController::class, 'getDanhSach'])->name('binhluan')->middleware('nhanvien');
+    Route::get('/binhluan', [BinhLuanController::class, 'getDanhSach'])->name('binhluan.danhsach')->middleware('nhanvien');
+    Route::get('/binhluan/{tieude_slug}', [BinhLuanController::class, 'getDanhSach'])->name('binhluan')->middleware('nhanvien');
     Route::get('/binhluan/them', [BinhLuanController::class, 'getThem'])->name('binhluan.them')->middleware('nhanvien');
     Route::post('/binhluan/them', [BinhLuanController::class, 'postThem'])->name('binhluan.them')->middleware('nhanvien');
     Route::get('/binhluan/sua/{id}', [BinhLuanController::class, 'getSua'])->name('binhluan.sua')->middleware('nhanvien');
@@ -206,9 +219,14 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function() {
     Route::get('/donhang/sua/{id}', [DonHangController::class, 'getSua'])->name('donhang.sua');
     Route::post('/donhang/sua/{id}', [DonHangController::class, 'postSua'])->name('donhang.sua');
     Route::get('/donhang/xoa/{id}', [DonHangController::class, 'getXoa'])->name('donhang.xoa');
+    Route::get('/donhang/moi', [DonHangController::class, 'getDanhSachDonHangMoi'])->name('donhang.moi')->middleware('nhanvien');
+    Route::post('/donhang/trangthai/{id}', [DonHangController::class, 'postTrangThai'])->name('donhang.trangthai')->middleware('nhanvien');
+    Route::get('/donhang/doanhthu', [DonHangController::class, 'getDoanhThu'])->name('donhang.doanhthu')->middleware('admin');
+    Route::get('/donhang/thongdoanhthu', [DonHangController::class, 'getDoanhThu'])->name('donhang.thongkedoanhthu')->middleware('admin');
+    Route::get('/donhang/ngay', [DonHangController::class, 'getDanhSachNgay'])->name('donhang.ngay')->middleware('admin');
 
     // Quản lý Đơn hàng chi tiết
-    Route::get('/donhang/chitiet', [DonHangChiTietController::class, 'getDanhSach'])->name('donhang.chitiet');
+    Route::get('/donhang/chitiet/{id}', [DonHangChiTietController::class, 'getDanhSach'])->name('donhang.chitiet');
     Route::get('/donhang/chitiet/sua/{id}', [DonHangChiTietController::class, 'getSua'])->name('donhang.chitiet.sua');
     Route::post('/donhang/chitiet/sua/{id}', [DonHangChiTietController::class, 'postSua'])->name('donhang.chitiet.sua');
     Route::get('/donhang/chitiet/xoa/{id}', [DonHangChiTietController::class, 'getXoa'])->name('donhang.chitiet.xoa');

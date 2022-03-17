@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\TinhTrang;
-class CreateTinhTrangsTable extends Migration
+
+class CreateTinhTrangsTable extends Migration 
 {
     /**
      * Run the migrations.
@@ -20,8 +21,17 @@ class CreateTinhTrangsTable extends Migration
             $table->timestamp('updated_at')->useCurrentOnUpdate();
             $table->engine = 'InnoDB';
         });
-        TinhTrang::create(['tentinhtrang'=>'Mới']);
-        TinhTrang::create(['tentinhtrang'=>'Cũ']);
+
+        TinhTrang::create(['tentinhtrang' => 'Mới']);
+        TinhTrang::create(['tentinhtrang' => 'Đang xác nhận / Đã xác nhận']);
+        TinhTrang::create(['tentinhtrang' => 'Đã hủy']);
+        TinhTrang::create(['tentinhtrang' => 'Đang đóng gói sản phẩm']);
+        TinhTrang::create(['tentinhtrang' => 'Chờ đi nhận / Đang đi nhận / Đã nhận hàng ']);
+        TinhTrang::create(['tentinhtrang' => 'Đang chuyển']);
+        TinhTrang::create(['tentinhtrang' => 'Thất bại']);
+        TinhTrang::create(['tentinhtrang' => 'Đang chuyển hoàn']);
+        TinhTrang::create(['tentinhtrang' => 'Đã chuyển hoàn ']);
+        TinhTrang::create(['tentinhtrang' => 'Thành công']);
     }
 
     /**

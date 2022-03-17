@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Models\SanPham;
 use DB;
+use App\Mail\DatHangEmail;
+use Illuminate\Support\Facades\Mail;
 use App\Models\BinhLuan;
 use App\Models\BaiViet;
 use App\Models\ThuongHieu;
+use App\Models\HinhAnh;
 use App\Models\Ram;
 use App\Models\BoNhoTrong;
 use App\Models\ThietKe;
@@ -65,6 +68,7 @@ class HomeController extends Controller
           
         $sanpham = SanPham::select( 'sanpham.*',
         DB::raw('(select hinhanh from hinhanh where sanpham_id = sanpham.id  limit 1) as hinhanh'))
+        
         ->where('sanpham.hienthi',1)
         ->where('sanpham.soluong','>',0)
         ->paginate(9);
@@ -223,18 +227,19 @@ class HomeController extends Controller
         $sanpham = SanPham::select( 'sanpham.*',
         DB::raw('(select hinhanh from hinhanh where sanpham_id = sanpham.id  limit 1) as hinhanh'))
         ->where('tensanpham_slug', $tensanpham_slug)->first();
+
         Cart::add([
             'id' => $sanpham->id,
             'name' => $sanpham->tensanpham,
             'price' => $sanpham->dongia,
-            'qty' => $request->qty,
+            'qty' => $request->quantity,
             'weight' => 0,
             'options' => [
                 'image' => $sanpham->hinhanh
             ]
         ]);
 
-        return redirect()->route('frontend');
+        return redirect()->back();
     }
 
    
@@ -362,7 +367,7 @@ class HomeController extends Controller
             ]
         ]);
 
-        return redirect()->route('frontend')->with('status', 'Đã thêm sản phẩm vào giỏ hàng');;
+        return redirect()->route('frontend')->with('status', 'Đã thêm sản phẩm vào giỏ hàng');
     }
 
 
@@ -420,7 +425,7 @@ class HomeController extends Controller
             $sp->soluong = $sp->soluong - $value->qty;
             $sp->save();
         }
-       
+       Mail::to(Auth::user()->email)->send(new DatHangEmail($dh));
         return redirect()->route('frontend.dathangthanhcong');
 
     }

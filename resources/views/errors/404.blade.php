@@ -27,7 +27,7 @@
                 <h3><i class="fas fa-exclamation-triangle text-warning"></i> Oops! Không tìm thấy trang.</h3>
                 <p>             
                 Chúng tôi không thể tìm thấy trang bạn đang tìm kiếm.
-                Trong khi đó, bạn có thể <a href="#" class="genric-btn success medium circle"> trở lại trang chủ </a> hoặc thử sử dụng biểu mẫu tìm kiếm.
+                Trong khi đó, bạn có thể <a href="{{route('frontend')}}" class="genric-btn success medium circle"> trở lại trang chủ </a> hoặc thử sử dụng biểu mẫu tìm kiếm.
                 </p>
                 <form class="search-form">
                   <div class="input-group">

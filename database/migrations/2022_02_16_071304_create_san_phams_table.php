@@ -16,7 +16,9 @@ class CreateSanPhamsTable extends Migration
         Schema::create('sanpham', function (Blueprint $table) {
             $table->id();
             $table->foreignId('loaisanpham_id')->constrained('loaisanpham')->onDelete('cascade');
-            $table->foreignId('thuonghieu_id')->constrained('thuonghieu')->onDelete('cascade');
+            $table->foreignId('thuonghieu_id')->references('id')->on('thuonghieu')->onUpdate('cascade');
+
+            //$table->foreignId('thuonghieu_id')->constrained('thuonghieu')->onDelete('cascade');
             $table->foreignId('thietke_id')->constrained('thietke')->onDelete('cascade');
             $table->foreignId('ram_id')->constrained('ram')->onDelete('cascade');
             $table->foreignId('bonhotrong_id')->constrained('bonhotrong')->onDelete('cascade');

@@ -62,36 +62,65 @@ class ThuongHieuController extends Controller
 
     
     public function postSua(Request $request, $id)
-    {
+    { 
                     // Kiểm tra
-        $this->validate($request, [
-            'tenthuonghieu' => ['required', 'string', 'max:191', 'unique:thuonghieu,tenthuonghieu,' . $id],
-            'hinhanh' => ['nullable', 'image', 'max:1024']
-        ]);
+        // $this->validate($request, [
+        //     'tenthuonghieu' => ['required', 'string', 'max:191', 'unique:thuonghieu,tenthuonghieu,' . $id],
+        //     'hinhanh' => ['nullable', 'image', 'max:1024']
+        // ]);
         
         // Upload hình ảnh
-        $path = '';
+        // $path = '';
+        // if($request->hasFile('hinhanh'))
+        // {
+        //     // Xóa file cũ
+        //     $orm = ThuongHieu::find($id);
+        //     Storage::delete($orm->hinhanh);
+            
+        //     // Upload file mới
+        //     $extension = $request->file('hinhanh')->extension();
+        //     $filename = Str::slug($request->tenthuonghieu, '-') . '.' . $extension;
+        //     $path = Storage::putFileAs('thuong-hieu', $request->file('hinhanh'), $filename);
+        // }
+        
+        // // Sửa
+        // $orm = ThuongHieu::find($id);
+        // $orm->tenthuonghieu = $request->tenthuonghieu;
+        // $orm->tenthuonghieu_slug = Str::slug($request->tenthuonghieu, '-');
+        // if(!empty($path)) $orm->hinhanh = $path;
+        // $orm->save();
+        
+        // // Quay về danh sách
+        // return redirect()->route('admin.thuonghieu');
+        $this->validate($request, [
+            'tenthuonghieu' => ['required', 'max:255', 'unique:thuonghieu,tenthuonghieu,'.$id],
+            'hinhanh' => ['nullable','image','max:1024']
+        ],
+        $messages = [
+            'required' => 'Tên thương hiệu không được bỏ trống.',
+            'unique' => 'Tên thương hiệu đã có trong hệ thống.',
+            'image' => 'Chỉ cho phép tập tin JPG, PNG, GIF!.',
+            'max' => 'Chỉ cho phép tập tin từ 2MB trở xuống!',
+        ]);
+
         if($request->hasFile('hinhanh'))
-        {
-            // Xóa file cũ
+        {   
             $orm = ThuongHieu::find($id);
             Storage::delete($orm->hinhanh);
-            
-            // Upload file mới
+
+
             $extension = $request->file('hinhanh')->extension();
-            $filename = Str::slug($request->tenthuonghieu, '-') . '.' . $extension;
-            $path = Storage::putFileAs('thuong-hieu', $request->file('hinhanh'), $filename);
+            $fileName = Str::slug($request->tenthuonghieu, '-'). '.' . $extension;
+            $path = Storage::putFileAs('thuonghieu', $request->file('hinhanh'), $fileName);
         }
-        
-        // Sửa
+
         $orm = ThuongHieu::find($id);
         $orm->tenthuonghieu = $request->tenthuonghieu;
         $orm->tenthuonghieu_slug = Str::slug($request->tenthuonghieu, '-');
         if(!empty($path)) $orm->hinhanh = $path;
         $orm->save();
-        
-        // Quay về danh sách
-        return redirect()->route('admin.thuonghieu');
+
+        return redirect()->route('admin.thuonghieu')->with('status', 'Cập nhật thành công');
     }
 
     

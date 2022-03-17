@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.frontend')
 @section('title', 'Cấp truy cập')
 @section('content')
     <!-- Main content -->

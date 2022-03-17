@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TinhTrang;
-use Str;
+use Illuminate\Support  \Str;
 
 class TinhTrangController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function getDanhSach()
 	 {
 	 		$tinhtrang = TinhTrang::all();
@@ -22,14 +27,19 @@ class TinhTrangController extends Controller
     public function postThem(Request $request)
     {
         $this->validate($request, [
-            'tentinhtrang' => ['required', 'max:191', 'unique:tinhtrang'],
+            'tentinhtrang' => ['required', 'max:255', 'unique:tinhtrang'],
+        ],
+        $messages = [
+            'required' => 'Tên tình trạng không được bỏ trống.',
+            'unique' => 'Tên tình trạng đã có trong hệ thống.',
+            'max'=> 'Tên tình trạng vượt quá 255 ký tự.'
             ]);
         $orm = new TinhTrang();
         $orm->tentinhtrang = $request->tentinhtrang;
         
         $orm->save();
         
-        return redirect()->route('admin.tinhtrang');
+        return redirect()->route('admin.tinhtrang')->with('status', 'Thêm mới thành công');
     }
 
     public function getSua($id)
@@ -43,6 +53,11 @@ class TinhTrangController extends Controller
     {
         $request->validate([
             'tentinhtrang' => ['required', 'string','max:255' ,'unique:tinhtrang,tentinhtrang,' . $id],
+        ],
+            $messages = [
+                'required' => 'Tên tình trạng không được bỏ trống.',
+                'unique' => 'Tên tình trạng đã có trong hệ thống.',
+                'max'=> 'Tên tình trạng vượt quá 255 ký tự.'
            
         ]);
         $orm = TinhTrang::find($id);
@@ -50,13 +65,13 @@ class TinhTrangController extends Controller
         
         $orm->save();
         
-        return redirect()->route('admin.tinhtrang');
+        return redirect()->route('admin.tinhtrang')->with('status', 'Cập nhật thành công');
     }
     public function getXoa($id)
     {
         $orm = TinhTrang::find($id);
         $orm->delete();
         
-        return redirect()->route('admin.tinhtrang');
+        return redirect()->route('admin.tinhtrang')->with('status', 'Xóa thành công');
     }
 }

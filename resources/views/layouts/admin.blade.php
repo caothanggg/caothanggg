@@ -27,7 +27,7 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            <a href="index.html"><img src="{{ asset('public/assets/img/logo/logo.png')}}" alt="Logo" srcset=""></a>
+                            <a href="{{route('admin.home')}}"><img src="{{ asset('public/assets/img/logo/1.png')}}" width="150"  alt="Logo" srcset=""></a>
                         </div>
                         <div class="toggler">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -52,6 +52,16 @@
                             </a>
                         </li>   
                         
+                        <li class="sidebar-item ">
+                            <a href="{{route('admin.donhang.doanhthu')}}" class='sidebar-link'>
+                            <i class="fas fa-balance-scale"></i>
+                                <span>Doanh Thu</span>
+                            </a>
+                        </li>
+                        
+                        
+                        @endif
+
                         <li class="sidebar-title">Danh Mục</li>
                         <li class="sidebar-item ">
                             <a href="{{route('admin.thuonghieu')}}" class='sidebar-link'>
@@ -101,17 +111,20 @@
                                 <span>Phương Thức Thanh Toán</span>
                             </a>
                         </li>
-                        @endif
 
                                                 
                         <li class="sidebar-title">Quản Lý</li>
 
                                                 <li class="sidebar-item ">
-                            <a href="{{route('admin.binhluan')}}" class='sidebar-link'>
+                            <a href="{{route('admin.binhluan.danhsach')}}" class='sidebar-link'>
                                 <i class="far fa-comment-dots"></i>
                                 <span>Bình Luận</span>
                             </a>
                         </li>
+
+                        
+
+                                                
 
                         <li class="sidebar-item ">
                             <a href="{{route('admin.baiviet')}}" class='sidebar-link'>
@@ -166,12 +179,10 @@
 
             <footer>
                 <div class="footer clearfix mb-0 text-muted">
-                    <div class="float-start">
-                        <p>2022 &copy; Bởi Cao Thắng</p>
-                    </div>
+                    
                     <div class="float-end">
-                        <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
-                                href="http://ViettelStore.com">A. Saugi</a></p>
+                        <p>Copyright ©2022 <span class="text-danger"><i class="bi bi-heart"></i></span> bởi <a
+                                href="http://ViettelStore.com">Cao Văn Đức Thắng</a></p>
                     </div>
                 </div>
             </footer>

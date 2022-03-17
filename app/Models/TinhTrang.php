@@ -11,6 +11,7 @@ class TinhTrang extends Model
 
     protected $table = 'tinhtrang';
     protected $fillable = ['tentinhtrang'];
+    
     // protected $primaryKey = 'id';
     // public $incrementing = false;
     // protected $keyType = 'string';

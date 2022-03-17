@@ -1,8 +1,19 @@
 @extends('layouts.frontend')
 
 @section('content')
- <div class="slider-with-banner">
+             <div class="breadcrumb-area">
                 <div class="container">
+                    <div class="breadcrumb-content">
+                        <ul>
+                            <li><a href="{{route('frontend')}}">Trang Chủ</a></li>
+                            <li class="active">Viettel Store</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Li's Breadcrumb Area End Here -->
+            <!-- Begin Li's Content Wraper Area -->
+             <div class="container">
                     <div class="row">
                         <!-- Begin Slider Area -->
                         <div class="col-lg-8 col-md-8">
@@ -70,134 +81,137 @@
             </div>
             
             <div class="li-static-banner pt-60 pb-50">
+            <div class="content-wraper pt-60 pb-60">
+                
                 <div class="container">
                     <div class="row">
-                        <!-- Begin Single Banner Area -->
-                        <div class="col-lg-4 col-md-4 text-center">
-                            <div class="single-banner">
-                                <a href="#">
-                                    <img src="{{asset('public/frontend/images/banner/3.jpg')}}" alt="Li's Static Banner">
-                                </a>
-                            </div>
-                        </div>
-                        <!-- Single Banner Area End Here -->
-                        <!-- Begin Single Banner Area -->
-                        <div class="col-lg-4 col-md-4 text-center pt-xs-30">
-                            <div class="single-banner">
-                                <a href="#">
-                                    <img src="{{asset('public/frontend/images/banner/4.jpg')}}" alt="Li's Static Banner">
-                                </a>
-                            </div>
-                        </div>
-                        <!-- Single Banner Area End Here -->
-                        <!-- Begin Single Banner Area -->
-                        <div class="col-lg-4 col-md-4 text-center pt-xs-30">
-                            <div class="single-banner">
-                                <a href="#">
-                                    <img src="{{asset('public/frontend/images/banner/5.jpg')}}" alt="Li's Static Banner">
-                                </a>
-                            </div>
-                        </div>
-                        <!-- Single Banner Area End Here -->
-                    </div>
-                </div>
-            </div>
-            
-            <section class="product-area li-laptop-product pt-60 pb-45">
-                <div class="container">
-                    <div class="row">
-                        <!-- Begin Li's Section Area -->
                         <div class="col-lg-12">
-                            <div class="li-section-title">
-                                <h2>
-                                    <span>Sản Phẩm</span>
-                                </h2>
-                                <ul class="li-sub-category-list">
-                                    <li class="active"><a href="shop-left-sidebar.html">Prime Video</a></li>
-                                    <li><a href="shop-left-sidebar.html">Computers</a></li>
-                                    <li><a href="shop-left-sidebar.html">Electronics</a></li>
-                                </ul>
+                            <!-- Begin Li's Banner Area -->
+                            
+                            <!-- Li's Banner Area End Here -->
+                            <!-- shop-top-bar start -->
+                            <div class="shop-top-bar mt-30">
+                                <div class="shop-bar-inner">
+                                    <div class="product-view-mode">
+                                        <!-- shop-item-filter-list start -->
+                                        <ul class="nav shop-item-filter-list" role="tablist">
+                                            <li class="active" role="presentation"><a aria-selected="true" class="active show" data-toggle="tab" role="tab" aria-controls="grid-view" href="#grid-view"><i class="fa fa-th"></i></a></li>
+                                            <li role="presentation"><a data-toggle="tab" role="tab" aria-controls="list-view" href="#list-view"><i class="fa fa-th-list"></i></a></li>
+                                        </ul>
+                                        <!-- shop-item-filter-list end -->
+                                    </div>
+                                    <div class="toolbar-amount">
+                                        <span>Showing 1 to 9 of 15</span>
+                                    </div>
+                                </div>
+                                <!-- product-select-box start -->
+                                <div class="product-select-box">
+                                    <div class="product-short">
+                                        <p>Sort By:</p>
+                                        <select class="nice-select">
+                                            <option value="trending">Relevance</option>
+                                            <option value="sales">Name (A - Z)</option>
+                                            <option value="sales">Name (Z - A)</option>
+                                            <option value="rating">Price (Low &gt; High)</option>
+                                            <option value="date">Rating (Lowest)</option>
+                                            <option value="price-asc">Model (A - Z)</option>
+                                            <option value="price-asc">Model (Z - A)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- product-select-box end -->
                             </div>
-                            <div class="row">
-                            	
-                                <div class="product-active owl-carousel">
-                                	@foreach($sanpham as $value)
-                                    <div class="col-lg-12">
-                                        <!-- single-product-wrap start -->
-                                        <div class="single-product-wrap">
-                                            <div class="product-image">
-                                                <a href="single-product.html">
-                                                    <img src="{{ env('APP_URL') . '/storage/app/' . $value->hinhanh }}" alt="Li's Product Image">
-                                                </a>
-                                                <span class="sticker">New</span>
-                                            </div>
-                                            <div class="product_desc">
-                                                <div class="product_desc_info">
-                                                    <div class="product-review">
-                                                        <h5 class="manufacturer">
-                                                            <a href="shop-left-sidebar.html">{{$value->loaisanpham->tenloai}}</a>
-                                                        </h5>
-                                                        <div class="rating-box">
-                                                            <ul class="rating">
-                                                                <li><i class="fa fa-star-o"></i></li>
-                                                                <li><i class="fa fa-star-o"></i></li>
-                                                                <li><i class="fa fa-star-o"></i></li>
-                                                                <li><i class="fa fa-star-o"></i></li>
-                                                                <li><i class="fa fa-star-o"></i></li>
-                                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                            </ul>
+                            <!-- shop-top-bar end -->
+                            <!-- shop-products-wrapper start -->
+                            <div class="shop-products-wrapper">
+                                <div class="tab-content">
+                                    <div id="grid-view" class="tab-pane fade active show" role="tabpanel">
+                                        <div class="product-area shop-product-area">
+                                            <div class="row">
+                                                 @foreach($sanpham as $value)
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mt-40">
+                                                    <!-- single-product-wrap start -->
+                                                    <div class="single-product-wrap">
+                                                           
+                                                        <div class="product-image">
+                                                            <a href="single-product.html">
+                                                                <<img src="{{ env('APP_URL') . '/storage/app/' . $value->hinhanh }}" alt="" class="img-fluid" />              
+                                                            </a>
+                                                            <span class="sticker">New</span>
+
                                                         </div>
+                                                        <div class="product_desc">
+                                                            <div class="product_desc_info">
+                                                                <div class="product-review">
+                                                                    <h5 class="manufacturer">
+                                                                        <a href="product-details.html">{{ $value->loaisanpham->tenloai     }}</a>
+                                                                    </h5>
+                                                                    <div class="rating-box">
+                                                                        <ul class="rating">
+                                                                            <li><i class="fa fa-star-o"></i></li>
+                                                                            <li><i class="fa fa-star-o"></i></li>
+                                                                            <li><i class="fa fa-star-o"></i></li>
+                                                                            <li class="no-star"><i class="fa fa-star-o"></i></li>
+                                                                            <li class="no-star"><i class="fa fa-star-o"></i></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                                <h4><a class="product_name" href="{{route('frontend.sanpham.chitiet',['tensanpham_slug' => $value->tensanpham_slug])}}">{{ $value->tensanpham     }}</a></h4>
+                                                                <div class="price-box">
+                                                                    <span class="new-price">{{ number_format($value->dongia) }}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="add-actions">
+                                                                <ul class="add-actions-link">
+                                                                    <li class="add-cart active"><a href="{{ route('frontend.giohang.them', ['tensanpham_slug' => $value->tensanpham_slug]) }}">Thêm Vào Giỏ</a></li>
+                                                                    <li><a href="{{route('frontend.sanpham.chitiet',['tensanpham_slug' => $value->tensanpham_slug])}}" title="quick view" class="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i class="fa fa-eye"></i></a></li>
+                                                                    <li><a class="links-details" href="{{route('khachhang.sanphamthem',['tensanpham_slug'=>$value->tensanpham_slug])}}"><i class="fa fa-heart"></i></a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">{{$value->tensanpham}}</a></h4>
-                                                    <div class="price-box">
-                                                        <span class="new-price">{{ number_format($value->dongia) }} <sup>vnđ</sup></span>
-                                                    </div>
+
+                                                    <!-- single-product-wrap end -->
                                                 </div>
-                                                <div class="add-actions">
-                                                    <ul class="add-actions-link">
-                                                        <li class="add-cart active"><a href="{{ route('frontend.giohang.them', ['tensanpham_slug' => $value->tensanpham_slug]) }}">Add to cart</a></li>
-                                                        <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
-                                                        <li><a href="#" title="quick view" class="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i class="fa fa-eye"></i></a></li>
-                                                    </ul>
-                                                </div>
+
+                                                
+                                                    <!-- single-product-wrap end -->
+                                            @endforeach
+                                               
+                                              
+                                        </div>
+
+                                    </div>
+
+                                   
+                                    <div class="paginatoin-area">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                <p>Showing 1-12 of 13 item(s)</p>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <ul class="pagination-box">
+                                                    <li><a href="#" class="Previous"><i class="fa fa-chevron-left"></i> Previous</a>
+                                                    </li>
+                                                    <li class="active"><a href="#">1</a></li>
+                                                    <li><a href="#">2</a></li>
+                                                    <li><a href="#">3</a></li>
+                                                    <li>
+                                                      <a href="#" class="Next"> Next <i class="fa fa-chevron-right"></i></a>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </div>
-                                        <!-- single-product-wrap end -->
                                     </div>
-                                    @endforeach
-                                </div>
-                                
-                            </div>
-                        </div>
-                        <!-- Li's Section Area End Here -->
-                    </div>
-                </div>
-            </section>
-            
-            <div class="li-static-home">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <!-- Begin Li's Static Home Image Area -->
-                            <div class="li-static-home-image"></div>
-                            <!-- Li's Static Home Image Area End Here -->
-                            <!-- Begin Li's Static Home Content Area -->
-                            <div class="li-static-home-content">
-                                <p>Khuyến Mãi<span>-20% Off</span>Tuần Này</p>
-                                <h2>Sản Phẩm Nổi Bật</h2>
-                                <h2>Phụ Kiện Kèm Theo 2022</h2>
-                                <p class="schedule">
-                                    Mua Ngay Chỉ Với
-                                    <span> 49.990.000₫</span>
-                                </p>
-                                <div class="default-btn">
-                                    <a href="shop-left-sidebar.html" class="links">Mua Sắm Ngay</a>
                                 </div>
                             </div>
-                            <!-- Li's Static Home Content Area End Here -->
+                            <!-- shop-products-wrapper end -->
                         </div>
+                       
                     </div>
+
                 </div>
             </div>
+
 @endsection
