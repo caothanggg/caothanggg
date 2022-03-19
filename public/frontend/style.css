@@ -1977,7 +1977,7 @@ textarea:focus {
 	transition: all 0.3s ease-in-out 0s;
 }
 .hb-menu nav ul > li > ul.hb-dropdown > li.active > a {
-		color: #fed700;
+		color: #0004fec2;
 }
 .hb-menu nav ul > li > ul.hb-dropdown > li > a:hover {
 	color: #fed700;

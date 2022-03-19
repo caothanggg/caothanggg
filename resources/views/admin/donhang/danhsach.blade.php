@@ -194,7 +194,7 @@
                                 </div>
                             </form>                           
                         </td>
-                        <td class="text-center"><a href="{{ route('admin.donhang.chitiet', ['id' => $value->id]) }}"><i class="fas fa-info"></i></a></td>
+                        <td class="text-center"><a class="btn-xem" href="{{ route('admin.donhang.chitiet', ['id' => $value->id]) }}"><i class="fas fa-info "></i></a></td>
                         <td class="text-center"><a href="{{ route('admin.donhang.sua', ['id' => $value->id]) }}"><i class="fas fa-edit"></i></a></td>
                         <td class="text-center"><a href="{{ route('admin.donhang.xoa', ['id' => $value->id]) }}"><i class="fas fa-trash-alt text-danger"></i></a></td>
                     </tr>
@@ -206,5 +206,42 @@
     </section>
 </div>
 
-    
+<div class="modal fade text-left" id="modal-xem" tabindex="-1" role="dialog"aria-labelledby="myModalLabel1" aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content" style=" width: 750px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel1">Đơn hàng chi tiết </h5>
+                <button type="button" class="close rounded-pill"
+                    data-bs-dismiss="modal" aria-label="Close">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div id="xem" class="modal-body">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-bs-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Đóng</span>
+                </button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('javascript')
+
+<script>
+	$(document).on('click', '.btn-xem', function(e) {
+		e.preventDefault();
+       
+		let url = $(this).attr('href');
+		$.get(url, function(res) {
+			$('#xem').html(res);
+			$('#modal-xem').modal('show');
+		})
+	});
+</script>
 @endsection

@@ -197,8 +197,9 @@
 
     <script src="{{asset('public/assets/vendors/apexcharts/apexcharts.js')}}"></script>
     <script src="{{asset('public/assets/js/pages/dashboard.js')}}"></script>
-
+    <script src="{{asset('public/assets/vendors/jquery/jquery.min.js')}}"></script>
     <script src="{{asset('public/assets/js/main.js')}}"></script>
+   
     @yield('javascript')
 </body>
 
